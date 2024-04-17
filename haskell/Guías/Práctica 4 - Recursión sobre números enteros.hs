@@ -1,3 +1,5 @@
+-- Este archivo es horrible no lo leas
+
 fibonacci :: Int -> Int
 fibonacci n
     | n == 0 = 0
