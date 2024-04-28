@@ -144,7 +144,182 @@ eAprox n = (1/ fromIntegral (factorial n) :: Float) + eAprox(n-1)
 e = eAprox 9
 
 -- ! Ejercicio 12
+sucesion :: Int -> Float
+sucesion 1 = 2
+sucesion n = 2 + (1 / sucesion (n-1))
+
 -- n debe ser natural
--- raizDe2Aprox :: Int -> Float
--- raizDe2Aprox 1 = 0
--- raizDe2Aprox n
+raizDe2Aprox :: Int -> Float
+raizDe2Aprox 1 = 1
+raizDe2Aprox n = sucesion n - 1
+
+-- ! Ejercicio 13
+sumaPequenia13 :: Int -> Int -> Int
+sumaPequenia13 n 1 = n
+sumaPequenia13 n m = n^m + sumaPequenia13 n (m-1)
+
+-- n y m deben ser naturales
+fnm :: Int -> Int -> Int
+fnm 1 m = sumaPequenia13 1 m
+fnm n m = sumaPequenia13 n m + fnm (n-1) m
+
+-- ! Ejercicio 14 (sumaPotencias)
+-- Es básicamente un copy/paste del anterior
+-- q, n y m deben ser naturales
+sumaPequenia14 :: Int -> Int -> Int -> Int
+sumaPequenia14 q n 1 = q^(n+1)
+sumaPequenia14 q n m = q^(n+m) + sumaPequenia14 q n (m-1)
+
+sumaPotencias :: Int -> Int -> Int -> Int
+sumaPotencias q 1 m = sumaPequenia14 q 1 m
+sumaPotencias q n m = sumaPequenia14 q n m + sumaPotencias q (n-1) m
+
+-- ! Ejercicio 15 (sumaRacionales)
+-- n y m deben ser naturales
+sumaPequenia15 :: Int -> Int -> Float
+sumaPequenia15 n 1 = fromIntegral n :: Float
+sumaPequenia15 n m = (fromIntegral n :: Float)/(fromIntegral m :: Float) + sumaPequenia15 n (m-1)
+
+sumaRacionales :: Int -> Int -> Float
+sumaRacionales 1 m = sumaPequenia15 1 m
+sumaRacionales n m = sumaPequenia15 n m + sumaRacionales (n-1) m
+
+-- ! Ejercicio 16
+-- a)
+menorDivisorAux :: Int -> Int -> Int
+menorDivisorAux 1 _ = 1
+menorDivisorAux n i
+  | mod n i == 0 = i
+  | otherwise = menorDivisorAux n (i+1)
+
+-- n debe ser natural
+menorDivisor :: Int -> Int
+menorDivisor n = menorDivisorAux n 2
+
+-- b)
+-- n debe ser natural
+esPrimo :: Int -> Bool
+esPrimo 1 = False
+esPrimo n = menorDivisor n == n
+
+-- c)
+valorMasGrande :: Int -> Int -> Int
+valorMasGrande n m
+  | n >= m = n
+  | otherwise = m
+
+valorMasChico :: Int -> Int -> Int
+valorMasChico n m
+  | n < m = n
+  | otherwise = m
+
+-- Usé el "Método de la resta"
+maximoComunDivisor :: Int -> Int -> Int
+maximoComunDivisor _ 1 = 1
+maximoComunDivisor 1 _ = 1
+maximoComunDivisor n m
+  | resta == 0 = m
+  | otherwise = maximoComunDivisor valorMasGrande_ valorMasChico_
+  where
+    n_ = valorMasGrande n m
+    m_ = valorMasChico n m
+    resta = n_ - m_
+    valorMasGrande_ = valorMasGrande resta m_
+    valorMasChico_ = valorMasChico resta m_
+
+-- n y m deben ser naturales
+sonCoprimos :: Int -> Int -> Bool
+sonCoprimos n m = maximoComunDivisor n m == 1
+
+-- d)
+-- n = n-ésimo primo
+-- i = Contador de primos
+-- p = Número que inicia en 1 y crece hasta ser primo por n-ésima vez
+nEsimoPrimoAux :: Int -> Int -> Int -> Int
+nEsimoPrimoAux n i p
+  | esPrimo p && (i+1) /= n = nEsimoPrimoAux n (i+1) (p+1)
+  | esPrimo p && (i+1) == n = p
+  | otherwise = nEsimoPrimoAux n i (p+1)
+
+-- n debe ser natural
+nEsimoPrimo :: Int -> Int
+nEsimoPrimo n = nEsimoPrimoAux n 0 1
+
+-- ! Ejercicicio 17
+esFibonacciAux :: Int -> Int -> Bool
+esFibonacciAux n i
+  | fibo < n = esFibonacciAux n (i+1)
+  | fibo > n = False
+  | otherwise = True
+  where fibo = fibonacci i
+
+-- n debe ser natural o cero
+esFibonacci :: Int -> Bool
+esFibonacci n = esFibonacciAux n 0
+
+-- ! Ejercicio 18
+esPar :: Int -> Bool
+esPar n = mod n 2 == 0
+
+-- n = Número al cual le buscamos el mayor dígito par
+-- ma = El mayor dígito par encontrado
+-- d = El dígito que estamos analizando actualmente
+mayorDigitoParAux :: Int -> Int -> Int -> Int
+mayorDigitoParAux n ma d
+  | cantidadDeCifras n < d = ma
+  | esPar iesimoDigito_ && iesimoDigito_ > ma = mayorDigitoParAux n iesimoDigito_ (d+1)
+  | otherwise = mayorDigitoParAux n ma (d+1)
+  where
+    iesimoDigito_ = iesimoDigito n d
+
+-- n debe ser natural
+mayorDigitoPar :: Int -> Int
+mayorDigitoPar n = mayorDigitoParAux n (-1) 1
+
+-- ! Ejercicio 19
+sumaDeKPrimos :: Int -> Int
+sumaDeKPrimos 1 = 2
+sumaDeKPrimos k = nEsimoPrimo k + sumaDeKPrimos (k-1)
+
+-- n = Número al cual se quiere saber si es suma "inicial" de primos (n = 1 + 3 + ..., la suma debe inicia en 1)
+-- k = k-ésimo primo que se está utilizando como último término de la suma
+esSumaInicialDePrimosAux :: Int -> Int -> Bool
+esSumaInicialDePrimosAux n k
+  | sumaDeKPrimos_ < n = esSumaInicialDePrimosAux n (k+1)
+  | sumaDeKPrimos_ == n = True
+  | sumaDeKPrimos_ > n = False
+  where sumaDeKPrimos_ = sumaDeKPrimos k
+
+-- n debe ser natural o cero
+esSumaInicialDePrimos :: Int -> Bool
+esSumaInicialDePrimos n = esSumaInicialDePrimosAux n 1
+
+-- ! Ejercicio 20
+-- sumaDivisoresAux :: Int -> Int -> Int
+-- sumaDivisoresAux n m
+--   | n == m =
+--   | otherwise = esd
+
+-- sumaDivisores :: Int -> Int
+-- sumaDivisores n = sumaDivisoresAux n 1
+
+-- n1 = Valor inicial del rango
+-- n2 = Valor final del rango
+-- ni = Número entre n1 y n2 a analizar
+-- mGuardado = Será el m que finalmente se retornará. Cambiará varias veces hasta llegar al correcto
+-- tomaValorMaxAux :: Int -> Int -> Int -> Int -> Int
+-- tomaValorMaxAux n1 n2 ni mGuardado
+--   | ni >= n2 = mGuardado
+--   | sumaDivisores_ > sumaDivisoresMGuardado_ = tomaValorMaxAux n1 n2 (ni+1) ni
+--   | otherwise = tomaValorMaxAux n1 n2 (ni+1) mGuardado
+--   where
+--     sumaDivisores_ = sumaDivisores m
+--     sumaDivisoresMGuardado_ = sumaDivisores mGuardado
+
+-- Hay que encontrar un número m entre n1 y n2 tal que ningún otro número en ese rango tenga una suma de divisores mayor que la suma de divisores de m
+-- n1 y n2 deben ser naturales, y n2 >= n1. Agregué el hecho de que si n2 = n1 + 1 o son iguales, retorna -1
+-- tomaValorMax :: Int -> Int -> Int
+-- tomaValorMax n1 n2
+--   | n1 == n2 || n2 == n1 + 1 = -1
+--   | n2 - n1 == 1 = n1+1
+--   | otherwise = tomaValorMaxAux n1 n2 (n1+1) (-1)
