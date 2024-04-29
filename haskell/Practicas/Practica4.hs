@@ -295,31 +295,49 @@ esSumaInicialDePrimos :: Int -> Bool
 esSumaInicialDePrimos n = esSumaInicialDePrimosAux n 1
 
 -- ! Ejercicio 20
--- sumaDivisoresAux :: Int -> Int -> Int
--- sumaDivisoresAux n m
---   | n == m =
---   | otherwise = esd
+-- n = Número al cual queremos saber la suma de sus divisores
+-- i = Número i-ésimo que se está estudiando
+-- s = Suma, crecerá poco a poco a medida que encuentre divisores
+sumaDivisoresAux :: Int -> Int -> Int -> Int
+sumaDivisoresAux n m s
+  | n == m = s + m
+  | esDivisible n m = sumaDivisoresAux n (m+1) (s+m)
+  | otherwise = sumaDivisoresAux n (m+1) s
 
--- sumaDivisores :: Int -> Int
--- sumaDivisores n = sumaDivisoresAux n 1
+sumaDivisores :: Int -> Int
+sumaDivisores n = sumaDivisoresAux n 1 0
 
 -- n1 = Valor inicial del rango
 -- n2 = Valor final del rango
 -- ni = Número entre n1 y n2 a analizar
 -- mGuardado = Será el m que finalmente se retornará. Cambiará varias veces hasta llegar al correcto
--- tomaValorMaxAux :: Int -> Int -> Int -> Int -> Int
--- tomaValorMaxAux n1 n2 ni mGuardado
---   | ni >= n2 = mGuardado
---   | sumaDivisores_ > sumaDivisoresMGuardado_ = tomaValorMaxAux n1 n2 (ni+1) ni
---   | otherwise = tomaValorMaxAux n1 n2 (ni+1) mGuardado
---   where
---     sumaDivisores_ = sumaDivisores m
---     sumaDivisoresMGuardado_ = sumaDivisores mGuardado
+tomaValorMaxAux :: Int -> Int -> Int -> Int -> Int
+tomaValorMaxAux n1 n2 ni mGuardado
+  | ni >= n2 = mGuardado
+  | mGuardado == -1 || sumaDivisores_ > sumaDivisoresMGuardado_ = tomaValorMaxAux n1 n2 (ni+1) ni
+  | otherwise = tomaValorMaxAux n1 n2 (ni+1) mGuardado
+  where
+    sumaDivisores_ = sumaDivisores ni
+    sumaDivisoresMGuardado_ = sumaDivisores mGuardado
 
 -- Hay que encontrar un número m entre n1 y n2 tal que ningún otro número en ese rango tenga una suma de divisores mayor que la suma de divisores de m
 -- n1 y n2 deben ser naturales, y n2 >= n1. Agregué el hecho de que si n2 = n1 + 1 o son iguales, retorna -1
--- tomaValorMax :: Int -> Int -> Int
--- tomaValorMax n1 n2
---   | n1 == n2 || n2 == n1 + 1 = -1
---   | n2 - n1 == 1 = n1+1
---   | otherwise = tomaValorMaxAux n1 n2 (n1+1) (-1)
+tomaValorMax :: Int -> Int -> Int
+tomaValorMax n1 n2
+  | n1 == n2 || n2 == n1 + 1 = -1
+  | n2 - n1 == 1 = n1+1
+  | otherwise = tomaValorMaxAux n1 n2 (n1+1) (-1)
+
+-- ! Ejercicio 21
+contar :: Int -> Int -> Int -> Int
+contar m 0 r
+  | m^2 <= r^2 = 1
+  | otherwise = 0
+contar m n r
+  | m^2 + n^2 <= r^2 = 1 + contar m (n-1) r
+  | otherwise = contar m (n-1) r
+
+-- m, n y r deben ser números naturales o cero
+pitagoras :: Int -> Int -> Int -> Int
+pitagoras 0 n r = contar 0 n r
+pitagoras m n r = contar m n r + pitagoras (m-1) n r
