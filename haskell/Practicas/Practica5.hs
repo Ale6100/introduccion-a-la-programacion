@@ -192,6 +192,54 @@ sacarBlancosRepetidos (x:y:xs)
   | otherwise = x : sacarBlancosRepetidos (y:xs)
 
 -- b)
--- contarPalabras :: [Char] -> Int
--- contarPalabras [] = 0
--- contarPalabras 
+-- El segundo parámetro es el contador que luego se retornará
+contarPalabrasAux :: [Char] -> Int -> Int
+contarPalabrasAux [] n = n-1
+contarPalabrasAux (x:xs) i
+  | x == ' ' = contarPalabrasAux xs (i+1)
+  | otherwise = contarPalabrasAux xs i
+
+asegurarEspacioEnLosExtremosYQuitarRepetidos :: [Char] -> [Char]
+asegurarEspacioEnLosExtremosYQuitarRepetidos x = sacarBlancosRepetidos ( [' '] ++ x ++ [' '])
+
+contarPalabras :: [Char] -> Int
+contarPalabras [] = 0
+contarPalabras x = contarPalabrasAux (asegurarEspacioEnLosExtremosYQuitarRepetidos x) 0
+
+-- c)
+-- x = Lista de carácteres sin blancos repetidos y con espacios en los extremos
+-- p = Palabra que se está construyendo actualmente
+-- li = Lista de palabras que se está construyendo
+palabrasAux :: [Char] -> [Char] -> [[Char]] -> [[Char]]
+palabrasAux (x:xs) p li
+  | longitud (x:xs) == 1 && longitud p /= 0 = li ++ [p]
+  | longitud (x:xs) == 1 && longitud p == 0 = li
+  | x == ' ' && longitud p == 0 = palabrasAux xs [] li
+  | x == ' ' && longitud p /= 0 = palabrasAux xs [] (li ++ [p])
+  | otherwise = palabrasAux xs (p ++ [x]) li
+
+palabras :: [Char] -> [[Char]]
+palabras [] = []
+palabras x = palabrasAux (asegurarEspacioEnLosExtremosYQuitarRepetidos x) [] []
+
+-- d)
+-- palabraMasLargaAux :: [[Char]] -> [Char] -> [Char]
+-- palabraMasLargaAux []  = []
+
+-- palabraMasLarga2 :: [Char]
+
+-- palabraMasLarga :: [Char] -> [Char]
+-- palabraMasLarga x = palabraMasLargaAux (palabras x) ' '
+-- palabraMasLarga [] = []
+-- palabraMasLarga = (x:xs)
+
+-- iesimoElemento :: Int -> [[Char]] -> [Char]
+-- iesimoElemento 
+
+
+-- palabraMasLarga :: [Char] -> [Char]
+-- palabraMasLarga [] = []
+-- palabraMasLarga x = iesimoElemento i_ x_
+--   where
+--     x_ = palabras x
+--     i_ = iesimaPalabraMasGrande x_
