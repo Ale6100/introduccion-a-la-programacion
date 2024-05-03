@@ -223,23 +223,8 @@ palabras [] = []
 palabras x = palabrasAux (asegurarEspacioEnLosExtremosYQuitarRepetidos x) [] []
 
 -- d)
--- palabraMasLargaAux :: [[Char]] -> [Char] -> [Char]
--- palabraMasLargaAux []  = []
-
--- palabraMasLarga2 :: [Char]
-
--- palabraMasLarga :: [Char] -> [Char]
--- palabraMasLarga x = palabraMasLargaAux (palabras x) ' '
--- palabraMasLarga [] = []
--- palabraMasLarga = (x:xs)
-
--- iesimoElemento :: Int -> [[Char]] -> [Char]
--- iesimoElemento 
-
-
 -- palabraMasLarga :: [Char] -> [Char]
 -- palabraMasLarga [] = []
--- palabraMasLarga x = iesimoElemento i_ x_
+-- palabraMasLarga x = palabraMasLargaAux x_ []
 --   where
 --     x_ = palabras x
---     i_ = iesimaPalabraMasGrande x_

@@ -186,15 +186,18 @@ sumaRacionales n m = sumaPequenia15 n m + sumaRacionales (n-1) m
 
 -- ! Ejercicio 16
 -- a)
+-- Ejercicio 16 a), práctica 4
+-- n = Número natural al cual se le busca el menor divisor
+-- i = Número natural que se va incrementando hasta encontrar el menor divisor
 menorDivisorAux :: Int -> Int -> Int
-menorDivisorAux 1 _ = 1
+menorDivisorAux 1 _ = 1 -- Caso excepcional, cuando n=1 el menor divisor es 1
 menorDivisorAux n i
-  | mod n i == 0 = i
-  | otherwise = menorDivisorAux n (i+1)
+  | mod n i == 0 = i -- Si el i actual es divisor de n, entonces lo retornamos
+  | otherwise = menorDivisorAux n (i+1) -- Si no, analizamos el siguiente i hasta encontrar el que buscamos
 
--- n debe ser natural
+-- n debe ser natural. Retorna el menor divisor mayor a 1 de n
 menorDivisor :: Int -> Int
-menorDivisor n = menorDivisorAux n 2
+menorDivisor n = menorDivisorAux n 2 -- Genero una función auxuliar que retorne el menor divisor
 
 -- b)
 -- n debe ser natural
