@@ -1,3 +1,5 @@
+import Practica4
+
 -- ! Ejercicio 1
 -- a)
 longitud :: [t] -> Int
@@ -149,9 +151,6 @@ sumarElUltimo :: [Int] -> [Int]
 sumarElUltimo x = sumarN (ultimo x) x
 
 -- g)
-esPar :: Int -> Bool
-esPar n = mod n 2 == 0
-
 pares :: [Int] -> [Int]
 pares [] = []
 pares [x]
@@ -223,8 +222,66 @@ palabras [] = []
 palabras x = palabrasAux (asegurarEspacioEnLosExtremosYQuitarRepetidos x) [] []
 
 -- d)
--- palabraMasLarga :: [Char] -> [Char]
--- palabraMasLarga [] = []
--- palabraMasLarga x = palabraMasLargaAux x_ []
---   where
---     x_ = palabras x
+palabraMasLargaAux :: [[Char]] -> [Char] -> [Char]
+palabraMasLargaAux [] p = p
+palabraMasLargaAux (x:xs) p
+  | longitud x >= longitud p = palabraMasLargaAux xs x
+  | otherwise = palabraMasLargaAux xs p
+
+palabraMasLarga :: [Char] -> [Char]
+palabraMasLarga [] = []
+palabraMasLarga x = palabraMasLargaAux (palabras x) []
+
+-- e)
+aplanar :: [[Char]] -> [Char]
+aplanar [] = []
+aplanar (x:xs) = x ++ aplanar xs
+
+-- f)
+-- Hace lo inverso de la función palabras
+aplanarConBlancos :: [[Char]] -> [Char]
+aplanarConBlancos [] = []
+aplanarConBlancos (x:xs)
+  | longitud xs == 0 = x
+  | otherwise = x ++ [' '] ++ aplanarConBlancos xs
+
+-- g)
+nBlancosAux :: Int -> Int -> [Char]
+nBlancosAux n i
+  | n == i = [' ']
+  | otherwise = ' ' : nBlancosAux n (i+1)
+
+-- n debe ser natural
+aplanarConNBlancos :: [[Char]] -> Int -> [Char]
+aplanarConNBlancos [] _ = []
+aplanarConNBlancos (x:xs) n
+  | longitud xs == 0 = x
+  | otherwise = x ++ nBlancosAux n 1 ++ aplanarConNBlancos xs n
+
+-- ! Ejercicio 5
+-- 1)
+-- Cada elemento de x es mayor o igual a cero
+sumaAcumuladaAux :: (Num t) => [t] -> t -> [t]
+sumaAcumuladaAux [] _ = []
+sumaAcumuladaAux (x:xs) n = (x+n) : sumaAcumuladaAux xs (x+n)
+
+sumaAcumulada :: (Num t) => [t] -> [t]
+sumaAcumulada x = sumaAcumuladaAux x 0
+
+-- 2)
+-- n = n-ésimo primo a considerar como factor
+descomponerNumeroAux :: Int -> Int -> [Int]
+descomponerNumeroAux 1 _ = []
+descomponerNumeroAux x n
+    | mod x nEsimoPrimo_ == 0 = nEsimoPrimo_ : descomponerNumeroAux (div x nEsimoPrimo_) n
+    | otherwise = descomponerNumeroAux x (n+1)
+    where nEsimoPrimo_ = nEsimoPrimo n
+
+descomponerNumero :: Int -> [Int]
+descomponerNumero x = descomponerNumeroAux x 1
+
+-- Los lementos de x deben ser mayores que 2
+descomponerEnPrimos :: [Int] -> [[Int]]
+descomponerEnPrimos [] = []
+descomponerEnPrimos [x] = [descomponerNumero x]
+descomponerEnPrimos (x:y:xs) = descomponerNumero x : descomponerEnPrimos (y:xs)
