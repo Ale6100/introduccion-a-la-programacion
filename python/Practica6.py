@@ -179,3 +179,56 @@ def monitorear_viaje_en_el_tiempo_for(anio_partida: int, anio_llegada: int):
 def monitorear_hasta_ver_a_aristoteles_for(anio_partida: int):
   for i in range(anio_partida, -385, -20):
     print(f'Viajó 20 años al pasado, estamos en el año {i}')
+
+#! Ejercicio 8
+# 1
+x = 5
+y = 7
+
+x = x + y
+print('x = 12:', x)
+
+#2
+x = 5
+y = 7
+z = x + y
+y = z * 2
+print('y = 24:', y)
+
+#3
+x = 5
+y = 7
+x = 'hora'
+y = x * 2
+print('y = horahora:', y)
+
+#4
+x = False
+res = not(x)
+print('res = True:', res)
+
+#5
+x = False
+x = not(x)
+print('x = True:', x)
+
+#6
+x = True
+y = False
+res = x and y
+x = res and x
+print('x = False:', x)
+
+#! Ejercicio 9
+def rt(x: int, g: int) -> int:
+  g = g + 1
+  return x + g
+
+g: int = 0
+def ro(x: int) -> int:
+  global g
+  g = g + 1
+  return x + g
+
+# print('9.1:', ro(1), ro(1), ro(1)) # Retorna 2 3 4
+# print('9.2: ', rt(1, 0), rt(1, 0), rt(1, 0)) # Retorna 2 2 2
