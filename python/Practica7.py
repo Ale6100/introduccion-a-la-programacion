@@ -1,4 +1,5 @@
-import math
+import math, random
+import numpy as np
 
 #? PRIMERA PARTE
 #! Ejercicio 1
@@ -177,3 +178,141 @@ def aprobado(notas: list[int]) -> int:
         elif 4 <= promedio_ < 7:
             res = 2
     return res
+
+#! Ejercicio 4
+#? 1
+def solicitar_nombres() -> list[str]:
+    nombres = []
+    continuar = True
+    while continuar:
+        nombre = input('Proporcione un nombre. Escriba "listo" pa finalizar\n')
+        if nombre == 'listo':
+            continuar = False
+        else:
+            nombres.append(nombre)
+    return nombres
+
+#? 2
+def historial_monedero_electronico() -> list[tuple[str, int]]:
+    historial = []
+    continuar = True
+    while continuar:
+        input_value = input('''
+                            Ingrese la operación:
+                            C: Cargar créditos
+                            D: Descontar créditos
+                            X: Finalizar la simulación
+                            ''')
+        if input_value == 'C' or input_value == 'D':
+            input_monto = input('Ingrese un monto: ')
+            historial.append((input_value, input_monto)) # Debería chequear que es un número pero se supone que no sabemos hacer eso todavía
+            print('Registrado exitósamente')
+        elif input_value == 'X':
+            continuar = False
+        else:
+            print('Operación no válida')
+    print('Programa finalizado')
+    return historial
+
+#? 3
+def juego_7_y_medio():
+    historial_cartas = []
+    historial_puntos = []
+    continuar = True
+    while continuar:
+        numero = random.randint(0, 12)
+
+        while numero == 8 or numero == 9:
+            numero = random.randint(0, 12)
+
+        historial_cartas.append(numero)
+        punto = 0.5 if numero in [10, 11, 12] else numero
+        historial_puntos.append(punto)
+
+        suma = sum(historial_puntos)
+
+        if suma > 7.5:
+            print(f'Has perdido! La suma de tus cartas es {suma}')
+            break
+
+        mensaje_tomar_carta = True
+        while mensaje_tomar_carta:
+            input_value = input(f'''
+                                Cartas elegidas: {len(historial_cartas)}
+                                Carta tomada. Deseas sacar otra carta del mazo o plantarte?
+                                T: Tomar carta
+                                P: Plantarse
+                                ''')
+            if input_value == 'T':
+                mensaje_tomar_carta = False
+            elif input_value == 'P':
+                mensaje_tomar_carta = False
+                continuar = False
+
+    print(f'Historial de cartas: \n{historial_cartas} \n\nHistorial de puntos: \n{historial_puntos} \n\nPuntos: \n{sum(historial_puntos)}')
+
+#! Ejercicio 5
+#? 1
+# Requiere que la longitud de res sea mayor o igual a la de s
+def pertenece_a_cada_uno_version_1(s: list[list[int]], e: int, res: list[bool]):
+    for i in range(0, len(s)):
+        res[i] = pertenece(s[i], e)
+    return res
+
+#? 2
+def pertenece_a_cada_uno_version_2(s: list[list[int]], e: int, res: list[bool]):
+    return pertenece_a_cada_uno_version_1(s, e, res)[:len(s)]
+
+#? 3
+def es_matriz(s: list[list[int]]) -> bool:
+    if len(s) <= 0:
+        return False
+
+    longitud_fila_1 = len(s[0])
+
+    for i in range(1, len(s)):
+        if len(s[i]) != longitud_fila_1:
+            return False
+    return True
+
+#? 4
+# Requiere que m sea una matriz
+def filas_ordenadas(m: list[list[int]], res: list[bool]) -> list[bool]:
+    for i in range(0, len(m)):
+        res[i] = ordenados(m[i])
+    return res
+
+#? 5
+def transponer_matriz(m: list[list[int]]):
+    m_transpuesto = np.random.random((len(m[0]), len(m)))
+    for i in range(0, len(m)):
+        for j in range(0, len(m[i])):
+            m_transpuesto[j][i] = m[i][j]
+    return m_transpuesto
+
+# Requiere que a y b tengan la misma longitud
+def producto_vectorial(a: list[int], b: list[int]):
+    suma = 0
+    for i in range(0, len(a)):
+        suma = suma + a[i] * b[i]
+    return suma
+
+def multiplicar_matriz_a_por_b(a: list[list[int]], b: list[list[int]]):
+    res = np.random.random((len(a), len(b[0]))) # No nos interesa el contenido de esta matriz, luego iré reemplazando sus valores
+
+    b_transpuesto = transponer_matriz(b)
+
+    for i in range(0, len(a)): # Filas de a
+        fila = a[i]
+        for j in range(0, len(b_transpuesto)):
+            res[i][j] = producto_vectorial(fila, b_transpuesto[j])
+
+    return res
+
+def generar_matriz_de_tamanio_d_y_elevarla_a_la_potencia_p(d: int, p: int) -> list[list[int]]:
+    matriz_cuadrada_de_tamanio_d = np.random.random((d, d)) # Valores al azar entre 0 y 1
+    matriz_copia = matriz_cuadrada_de_tamanio_d.copy()
+
+    for _ in range(p-1):
+        matriz_cuadrada_de_tamanio_d = multiplicar_matriz_a_por_b(matriz_cuadrada_de_tamanio_d, matriz_copia)
+    return matriz_cuadrada_de_tamanio_d
