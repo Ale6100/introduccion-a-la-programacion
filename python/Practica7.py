@@ -253,15 +253,16 @@ def juego_7_y_medio():
 
 #! Ejercicio 5
 #? 1
-# Requiere que la longitud de res sea mayor o igual a la de s
 def pertenece_a_cada_uno_version_1(s: list[list[int]], e: int, res: list[bool]):
     for i in range(0, len(s)):
-        res[i] = pertenece(s[i], e)
-    return res
+        res.insert(i, pertenece(s[i], e))
 
 #? 2
 def pertenece_a_cada_uno_version_2(s: list[list[int]], e: int, res: list[bool]):
-    return pertenece_a_cada_uno_version_1(s, e, res)[:len(s)]
+    res.clear()
+
+    for i in range(0, len(s)):
+        res.append(pertenece(s[i], e))
 
 #? 3
 def es_matriz(s: list[list[int]]) -> bool:
@@ -316,3 +317,29 @@ def generar_matriz_de_tamanio_d_y_elevarla_a_la_potencia_p(d: int, p: int) -> li
     for _ in range(p-1):
         matriz_cuadrada_de_tamanio_d = multiplicar_matriz_a_por_b(matriz_cuadrada_de_tamanio_d, matriz_copia)
     return matriz_cuadrada_de_tamanio_d
+
+#! Ejercicio extra
+def es_par(n: int) -> bool:
+    return n % 2 == 0
+
+def extraer_subsecuencia_de_pares_mas_larga(s: list[int]) -> list[str]:
+    subsecuencia_de_pares_mas_larga = []
+
+    i = 0
+    while i < len(s):
+        d = 0
+        subsecuencia_de_pares_temporal = []
+
+        while i+d != len(s) and es_par(s[i+d]):
+            subsecuencia_de_pares_temporal.append(s[i+d])
+            d = d + 1
+
+        if len(subsecuencia_de_pares_mas_larga) <= len(subsecuencia_de_pares_temporal):
+            subsecuencia_de_pares_mas_larga = subsecuencia_de_pares_temporal
+
+        if d == 0:
+            i = i + 1
+        else:
+            i = i + d
+
+    return subsecuencia_de_pares_mas_larga
