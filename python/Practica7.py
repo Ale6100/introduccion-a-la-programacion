@@ -279,9 +279,10 @@ def es_matriz(s: list[list[int]]) -> bool:
 #? 4
 # Requiere que m sea una matriz
 def filas_ordenadas(m: list[list[int]], res: list[bool]) -> list[bool]:
+    res.clear()
+
     for i in range(0, len(m)):
-        res[i] = ordenados(m[i])
-    return res
+        res.append(ordenados(m[i]))
 
 #? 5
 def transponer_matriz(m: list[list[int]]):
