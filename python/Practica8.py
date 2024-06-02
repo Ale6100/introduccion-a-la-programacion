@@ -418,4 +418,66 @@ def agrupar_por_longitud(nombre_archivo: str) -> dict:
 
 #! Ejercicio 21
 def la_palabra_mas_frecuente(nombre_archivo: str) -> str:
-    pass
+    archivo: typing.IO = open(nombre_archivo, 'r', encoding='utf-8')
+
+    contenido = archivo.read()
+
+    lista_palabras: list[str] = []
+    palabra_aux = ""
+
+    for token in contenido:
+        if token != ' ' and token != '\n':
+            palabra_aux += token
+        else:
+            lista_palabras.append(palabra_aux)
+            palabra_aux = ''
+
+    diccionario = {}
+
+    for palabra in lista_palabras:
+        if pertenece_en_lista(palabra, diccionario.keys()):
+            diccionario[palabra] += 1
+        else:
+            diccionario[palabra] = 1
+
+    res = ""
+    contador = 0
+    for palabra, veces_que_aparece in diccionario.items():
+        if veces_que_aparece >= contador:
+            res = palabra
+            contador = veces_que_aparece
+    return res
+
+#! Ejercicio 22
+#2 Requiere que ya esté registrado
+def visitar_sitio(historiales: dict[str, Pila[str]], usuario: str, sitio: str):
+    historiales[usuario].put(sitio)
+
+#3 Requiere que ya esté registrado y tenga dos elementos en el historial
+def navegar_atras(historiales: dict[str, Pila[str]], usuario: str):
+    ultimo = historiales[usuario].get()
+    ante_ultimo = historiales[usuario].get()
+    historiales[usuario].put(ante_ultimo)
+    historiales[usuario].put(ultimo)
+    historiales[usuario].put(ante_ultimo)
+
+#! Ejercicio 23
+# Requiere que el producto no esté previamente en el diccionario
+def agregar_producto(inventario: dict[str, float, int], nombre: str, precio: float, cantidad: int):
+    inventario[nombre] = {
+        'precio': precio,
+        'cantidad': cantidad
+    }
+
+def actualizar_stock(inventario: dict[str, float, int], nombre: str, cantidad: int):
+    inventario[nombre]['cantidad'] = cantidad
+
+def actualizar_precios(inventario: dict[str, float, int], nombre: str, precio: float):
+    inventario[nombre]['precio'] = precio
+
+def calcular_valor_inventario(inventario: dict[str, float, int]) -> float:
+    valor = 0
+    for producto, info in inventario.items():
+        valor += info['precio']*info['cantidad']
+
+    return valor
