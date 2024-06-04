@@ -4,14 +4,6 @@ from queue import Queue as Cola
 import random
 
 #? Funciones auxiliares generales
-def pertenece_texto_en_texto(texto: str, texto_largo: str) -> bool:
-    longitud_texto = len(texto)
-
-    for i in range(len(texto_largo)):
-        if texto == texto_largo[i:i+longitud_texto]:
-            return True
-    return False
-
 def pertenece_en_lista(elem: str | int, lista: list[str | int]) -> bool:
     for elemento_lista in lista:
         if elem == elemento_lista:
@@ -43,7 +35,7 @@ def existe_palabra(palabra: str, nombre_archivo: str) -> bool:
     contenido = archivo.read()
 
     archivo.close()
-    return pertenece_texto_en_texto(palabra, contenido)
+    return palabra in contenido
 
 #? 3
 def cantidad_apariciones(nombre_archivo: str, palabra: str) -> int:
@@ -52,7 +44,7 @@ def cantidad_apariciones(nombre_archivo: str, palabra: str) -> int:
     contenido = archivo.read()
 
     contador = 0
-    while pertenece_texto_en_texto(palabra,contenido):
+    while palabra in contenido:
         contador = contador + 1
 
         indice_inicia_palabra = contenido.index(palabra)
@@ -121,11 +113,11 @@ def listar_palabras_de_archivo(nombre_archivo: str) -> list[str]:
         byte = contenido[i]
         caracter = chr(byte)
 
-        if pertenece_texto_en_texto(caracter, ' \n'):
+        if caracter in ' \n':
             if len(palabra) >= 5:
                 lista.append(palabra)
             palabra = ""
-        elif pertenece_texto_en_texto(caracter, '0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ_'):
+        elif caracter in '0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ_':
             palabra = palabra + caracter
 
     archivo.close()
@@ -221,23 +213,25 @@ def buscar_el_maximo(p: Pila[int]) -> int:
 
 #! Ejercicio 11
 def esta_bien_balanceada(s: str) -> bool:
-    parentesis: Pila[str] = Pila()
+    pila_de_parentesis: Pila[str] = Pila()
     i = 0
     bien_balanceada = True
     while bien_balanceada and i < len(s):
         caracter = s[i]
-        if pertenece_texto_en_texto(caracter, '()'):
-            if parentesis.empty():
+        if caracter in '()':
+            if pila_de_parentesis.empty():
                 if caracter == ')':
                     bien_balanceada = False
                 else:
-                    parentesis.put(caracter)
+                    pila_de_parentesis.put(caracter)
             else:
-                ultimo_elemento_parentesis = parentesis.get()
+                ultimo_elemento_parentesis = pila_de_parentesis.get()
                 if not (ultimo_elemento_parentesis == '(' and caracter == ')'):
-                    parentesis.put(ultimo_elemento_parentesis)
-                    parentesis.put(caracter)
+                    pila_de_parentesis.put(ultimo_elemento_parentesis)
+                    pila_de_parentesis.put(caracter)
         i += 1
+    if not pila_de_parentesis.empty():
+        bien_balanceada = False
     return bien_balanceada
 
 #! Ejercicio 12
