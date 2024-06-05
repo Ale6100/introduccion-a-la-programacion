@@ -352,7 +352,7 @@ def n_pacientes_urgentes(c: Cola[(int, str, str)]) -> int:
     return contador
 
 #! Ejercicio 18
-def atencion_a_clientes(c: Cola[(str, int, bool, bool)]):
+def atencion_a_clientes(c: Cola[(str, int, bool, bool)]) -> Cola[(str, int, bool, bool)]:
     cola_final: Cola[(str, int, bool, bool)] = Cola()
     cola_copia : Cola[(str, int, bool, bool)] = Cola()
 
@@ -463,6 +463,7 @@ def agregar_producto(inventario: dict[str, float, int], nombre: str, precio: flo
         'cantidad': cantidad
     }
 
+# Las dos siguientes funciones requieren que el producto esté previamente en el diccionario
 def actualizar_stock(inventario: dict[str, float, int], nombre: str, cantidad: int):
     inventario[nombre]['cantidad'] = cantidad
 
@@ -471,7 +472,7 @@ def actualizar_precios(inventario: dict[str, float, int], nombre: str, precio: f
 
 def calcular_valor_inventario(inventario: dict[str, float, int]) -> float:
     valor = 0
-    for producto, info in inventario.items():
+    for _, info in inventario.items():
         valor += info['precio']*info['cantidad']
 
     return valor
