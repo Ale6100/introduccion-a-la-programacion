@@ -4,12 +4,6 @@ from queue import Queue as Cola
 import random
 
 #? Funciones auxiliares generales
-def pertenece_en_lista(elem: str | int, lista: list[str | int]) -> bool:
-    for elemento_lista in lista:
-        if elem == elemento_lista:
-            return True
-    return False
-
 def quitar_numero_de_la_lista(num: int, lista: list[int]):
     i = 0
     while i < len(lista):
@@ -152,7 +146,7 @@ def calcular_promedio_por_estudiante(nombre_archivo_notas: str, nombre_archivo_p
         nota = float(datos_desestructurados[-1])
 
         cantidad_de_notas_actuales, nota_actual = 0, 0
-        if pertenece_en_lista(LU, datos_estudiantes.keys()):
+        if LU in datos_estudiantes.keys():
             cantidad_de_notas_actuales = datos_estudiantes[LU]["cantidad_de_notas"]
             nota_actual = datos_estudiantes[LU]["nota"]
 
@@ -306,7 +300,7 @@ def armar_secuencia_de_bingo() -> Cola[int]:
     lista: list[int] = []
     while len(lista) != 100:
         numero_random = random.randint(0, 99)
-        while pertenece_en_lista(numero_random, lista):
+        while numero_random in lista:
             numero_random = random.randint(0, 99)
         lista.append(numero_random)
 
@@ -322,7 +316,7 @@ def jugar_carton_de_bingo(carton: list[int], bolillero: Cola[int]) -> int:
     while len(carton) != 0:
         numero_bolillero = bolillero.get()
         bolillero_aux.put(numero_bolillero)
-        if pertenece_en_lista(numero_bolillero, carton):
+        if numero_bolillero in carton:
             quitar_numero_de_la_lista(numero_bolillero, carton)
         cantidad_de_jugadas += 1
 
@@ -396,7 +390,7 @@ def agrupar_por_longitud(nombre_archivo: str) -> dict:
     for caracter in contenido:
         if caracter == " " or caracter == "\n":
             longitud_palabra = len(palabra)
-            if pertenece_en_lista(longitud_palabra, diccionario.keys()):
+            if longitud_palabra in diccionario.keys():
                 diccionario[longitud_palabra] += 1
             else:
                 diccionario[longitud_palabra] = 1
@@ -429,7 +423,7 @@ def la_palabra_mas_frecuente(nombre_archivo: str) -> str:
     diccionario = {}
 
     for palabra in lista_palabras:
-        if pertenece_en_lista(palabra, diccionario.keys()):
+        if palabra in diccionario.keys():
             diccionario[palabra] += 1
         else:
             diccionario[palabra] = 1
